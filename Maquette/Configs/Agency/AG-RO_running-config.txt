@@ -1,0 +1,112 @@
+!
+version 15.1
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+service password-encryption
+!
+hostname AG-RO
+!
+!
+!
+enable secret 5 $1$mERr$vTbHul1N28cEp8lkLqr0f/
+!
+!
+!
+!
+!
+!
+no ip cef
+no ipv6 cef
+!
+!
+!
+username admin secret 5 $1$mERr$vTbHul1N28cEp8lkLqr0f/
+!
+!
+license udi pid CISCO2911/K9 sn FTX1524Q58F-
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip ssh version 2
+ip ssh time-out 60
+ip domain-name vergis-corp.net
+!
+!
+spanning-tree mode pvst
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0
+ no ip address
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0.200
+ encapsulation dot1Q 200
+ ip address 192.168.15.30 255.255.255.224
+ ip helper-address 192.168.15.49
+!
+interface GigabitEthernet0/1
+ no ip address
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/1.210
+ encapsulation dot1Q 210
+ ip address 192.168.15.46 255.255.255.240
+ ip helper-address 192.168.15.49
+!
+interface GigabitEthernet0/2
+ ip address 192.168.15.54 255.255.255.248
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0/0
+ ip address 192.168.4.34 255.255.255.252
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+router eigrp 100
+ network 192.168.4.32 0.0.0.3
+ network 192.168.15.0
+ 
+!
+ip classless
+ip route 192.168.15.0 255.255.255.224 GigabitEthernet0/0 
+ip route 192.168.15.32 255.255.255.240 GigabitEthernet0/1 
+ip route 192.168.15.48 255.255.255.240 GigabitEthernet0/2 
+!
+ip flow-export version 9
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ password 7 082048430017
+ login
+!
+line aux 0
+!
+line vty 0 4
+ login local
+ transport input ssh
+!
+!
+!
+end
+

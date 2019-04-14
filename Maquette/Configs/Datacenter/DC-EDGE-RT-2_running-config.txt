@@ -1,0 +1,119 @@
+!
+version 15.1
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname DC-EDGE-RT-2
+!
+!
+!
+!
+!
+!
+!
+!
+no ip cef
+no ipv6 cef
+!
+!
+!
+!
+license udi pid CISCO2911/K9 sn FTX1524A23L-
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+spanning-tree mode pvst
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0
+ ip address 10.0.0.2 255.0.0.0
+ duplex auto
+ speed auto
+ standby 150 ip 10.0.0.254
+!
+interface GigabitEthernet0/1
+ no ip address
+ duplex auto
+ speed auto
+ shutdown
+!
+interface GigabitEthernet0/2
+ no ip address
+ duplex auto
+ speed auto
+ shutdown
+!
+interface GigabitEthernet0/0/0
+ ip address 200.0.0.6 255.255.255.252
+ ip nat outside
+!
+interface GigabitEthernet0/1/0
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/2/0
+ no ip address
+ ip nat inside
+!
+interface GigabitEthernet0/3/0
+ no ip address
+ shutdown
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+router eigrp 100
+ network 200.0.0.4 0.0.0.3
+ 
+!
+router eigrp 200
+ redistribute static 
+ network 200.0.0.0 0.0.0.3
+ auto-summary
+!
+ip nat pool NATPOOL 200.0.0.10 200.0.0.10 netmask 255.255.255.248
+ip nat inside source list 10 pool NATPOOL overload
+ip nat inside source list PAT interface GigabitEthernet0/0/0 overload
+ip classless
+ip route 0.0.0.0 0.0.0.0 200.0.0.5 
+!
+ip flow-export version 9
+!
+!
+ip access-list standard PAT
+ permit 10.0.0.0 0.0.0.255
+access-list 10 permit 0.0.0.0 255.0.0.0
+!
+banner login 
+You have entered $(hostname).$(domain) on line $(line) ($(line-desc)). Activity on this appliance is monitored. 
+banner motd Unauthorized access to this device is prohibited! Property of Vergis Corp!
+!
+!
+!
+!
+!
+line con 0
+!
+line aux 0
+!
+line vty 0 4
+ login
+!
+!
+!
+end
+
